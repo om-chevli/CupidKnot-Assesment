@@ -1,10 +1,11 @@
-import 'package:cupid_knot/screens/Home.dart';
+import 'package:cupid_knot/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '/models/auth.dart';
 import '/screens/Login.dart';
 import '/screens/Register.dart';
 import '/screens/splash_screen.dart';
+import 'models/Users.dart';
 
 void main() => runApp(MyApp());
 
@@ -31,12 +32,20 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(
           value: Auth(),
         ),
+        ChangeNotifierProxyProvider<Auth, Users>(
+          create: (ctx) => Users(),
+          update: (ctx, auth, previousUsers) => Users(
+            authToken: auth.token,
+            users: previousUsers == null ? [] : previousUsers.usersCopy,
+          ),
+        ),
       ],
       child: Consumer<Auth>(
         builder: (context, auth, _) => MaterialApp(
           title: 'Cupid Knot',
           theme: ThemeData(
             primarySwatch: colorCustom,
+            accentColor: Colors.deepOrangeAccent[200],
           ),
           home: auth.isAuth
               ? Home()

@@ -27,13 +27,15 @@ class Auth with ChangeNotifier {
         _accessToken != null) {
       return _accessToken;
     } else {
-      _newAccessToken();
+      return "$_newAccessToken()";
     }
   }
 
-  Future<void> _newAccessToken() async {
-    final response = await http.post(Uri.https(url!, 'api/refresh'),
-        body: RefreshTokens(refreshToken: _refereshToken));
+  Future<String?> _newAccessToken() async {
+    final response = await http.post(
+      Uri.https(url!, 'api/refresh'),
+      body: RefreshTokens(refreshToken: _refereshToken),
+    );
     final responseData = json.decode(response.body);
     if (response.statusCode == 302) {
       return null;

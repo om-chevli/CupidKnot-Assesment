@@ -15,7 +15,6 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _form = GlobalKey<FormState>();
   var _isLoading = false;
-  String url = 'cupidknot.kuldip.dev';
   String status = "";
 
   final emailController = TextEditingController();
