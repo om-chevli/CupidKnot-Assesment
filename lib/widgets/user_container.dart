@@ -70,7 +70,7 @@ class _UserDetailState extends State<UserDetail> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "${widget.user.gender}, ${widget.user.dob}",
+              "${widget.user.gender}, ${widget.user.dob?.year}",
               softWrap: true,
               maxLines: 1,
               overflow: TextOverflow.clip,

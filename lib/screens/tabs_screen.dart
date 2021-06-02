@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/auth.dart';
 import 'package:http/http.dart' as http;
-import './profile.dart';
+import 'Profile.dart';
 import './users_list.dart';
 
 class Home extends StatefulWidget {

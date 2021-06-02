@@ -1,7 +1,6 @@
 import 'package:cupid_knot/widgets/user_container.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/User.dart' as usr;
 
 import '../models/Users.dart';
 

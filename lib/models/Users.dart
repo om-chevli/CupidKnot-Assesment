@@ -30,8 +30,24 @@ class Users with ChangeNotifier {
 
   String? url = 'cupidknot.kuldip.dev';
 
+  User personalProfile = new User(
+    dob: DateTime.now(),
+    gender: "gender",
+    name: "name",
+    userId: "userId",
+    email: "",
+    religion: "",
+    usrImage: "",
+  );
+
   List<User> get usersCopy {
     return [...?users];
+  }
+
+  // User personalProfile;
+
+  User get profileCopy {
+    return personalProfile;
   }
 
   Future<void> fetchUsers() async {
@@ -68,7 +84,11 @@ class Users with ChangeNotifier {
             id.add(value.toString());
           }
           if (key == "birth_date") {
-            dob.add(value.toString());
+            if (value != null) {
+              dob.add(DateTime.tryParse(value));
+            } else {
+              dob.add(DateTime.tryParse("11/01/1911"));
+            }
           }
           if (key == "gender") {
             if (value != null) {
@@ -106,11 +126,75 @@ class Users with ChangeNotifier {
         );
       }
       print(loadedUsers.length);
-
       users = loadedUsers.toList();
       notifyListeners();
     } catch (e) {
+      debugPrintStack();
       throw (e);
+    }
+  }
+
+  Future<void> viewProfile() async {
+    try {
+      final response = await http.get(
+        Uri.https(url!, 'api/user'),
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer " + authToken!,
+        },
+      );
+      final extractedUser = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedUser == null) {
+        return;
+      }
+      print(extractedUser["name"]);
+      print(extractedUser["birth_date"]);
+      print(extractedUser["gender"]);
+      print(extractedUser["id"]);
+      personalProfile = User(
+        name: extractedUser["name"],
+        dob: DateTime.parse(extractedUser["birth_date"]),
+        gender: extractedUser["gender"] == null ? "" : extractedUser["gender"],
+        userId: extractedUser["id"].toString(),
+        usrImage: extractedUser["user_images"],
+        email: extractedUser["email"],
+        religion: extractedUser["religion"],
+      );
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> updateProfile(User newValues) async {
+    try {
+      await http.post(
+        Uri.https(url!, 'api/update_user'),
+        body: {
+          'first_name': newValues.fName,
+          'last_name': newValues.lName,
+          'email': newValues.email,
+          'religion': newValues.religion,
+          'birth_date': newValues.dob.toString(),
+          'gender': newValues.gender,
+          'updated_at': DateTime.now().toString(),
+        },
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer " + authToken!,
+        },
+      ).then((res) {
+        personalProfile = User(
+          name: "${newValues.fName}" + " " + "${newValues.lName}",
+          email: newValues.email,
+          religion: newValues.religion,
+          dob: newValues.dob,
+          gender: newValues.gender,
+          userId: newValues.userId,
+        );
+        notifyListeners();
+      });
+    } catch (e) {
+      throw e;
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cupid_knot/screens/edit_profile.dart';
 import 'package:cupid_knot/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -59,6 +60,7 @@ class MyApp extends StatelessWidget {
           routes: {
             Login.routeName: (ctx) => Login(),
             Register.routeName: (ctx) => Register(),
+            EditProfile.routeName: (ctx) => EditProfile(),
           },
         ),
       ),
